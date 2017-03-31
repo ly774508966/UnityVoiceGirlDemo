@@ -21,11 +21,10 @@ public class ServerThread
         string data = null;
         byte[] bytes = null;
 
-        Debug.Log("新客户连接建立：" + ((IPEndPoint)m_client.RemoteEndPoint).Address);
         while ((bytes = ReceiveMessage(m_client, fixedsize)).Length != 0)
         {
             data = System.Text.Encoding.ASCII.GetString(bytes, 0, fixedsize);
-            Debug.Log("收到的数据:" + data);
+            Log.WriteToLog("收到的命令:" + data);
             // 处理客户端发来的消息，这里是转化为大写字母
             data=data.Trim( '\0');
             ExecuteOrder(data);
@@ -65,7 +64,7 @@ public class ServerThread
         switch (order)
         {
             case "start":
-                Debug.Log("进入start case");
+                Log.WriteToLog("--------开始说话");
                 Loom.QueueOnMainThread(
                     () =>
                     {
@@ -74,14 +73,16 @@ public class ServerThread
 
                 break;
             case "stop":
+                Log.WriteToLog("--------结束说话");
                 Loom.QueueOnMainThread(
         () =>
         {
             CharacterManager.Instance.GetComponent<CharacterManager>().isSpeaking = false;
         });
-                Debug.Log("stop case");
                 break;
             case "max":
+                Log.WriteToLog("--------最大化");
+
                 Loom.QueueOnMainThread(
        () =>
        {
@@ -89,6 +90,7 @@ public class ServerThread
        });
                 break;
             case "min":
+                Log.WriteToLog("--------最小化");
                 Loom.QueueOnMainThread(
                 () =>
                                 {

@@ -9,6 +9,7 @@ public class SocketServer : MonoBehaviour
 {
 
     private Socket m_server;
+    private static int connectedCount;
 
     void Start ()
 	{
@@ -30,12 +31,15 @@ public class SocketServer : MonoBehaviour
 
     private void ServerAccept()
     {
+        Log.Init();
         while (true)
         {
             Debug.Log("开始接收客户端信息");
+            Log.WriteToLog("开始接收客户端信息");
             // 得到包含客户端信息的套接字
             Socket client = m_server.Accept();
-            Debug.Log("接收到客户端");
+            Debug.Log("来了来了");
+            Log.WriteToLog("接收到第" + ++connectedCount + "个客户端");
             //创建消息服务线程对象
             ServerThread newclient = new ServerThread(client);
 

@@ -179,11 +179,6 @@ public class AudioCapture : Singleton<AudioCapture>
     {
         string question = m_socketClient.ReadString();
         Debug.Log("question is " + question);
-        FileStream fs = new FileStream("1.txt", FileMode.Append);
-        StreamWriter sw=new StreamWriter(fs);
-        sw.WriteLine("我听到的是-{0}",question);
-        sw.Close();
-        fs.Close();
         GetAnswer(question);
     }
 
