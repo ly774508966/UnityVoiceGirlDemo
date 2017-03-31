@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using Academy.HoloToolkit.Unity;
 using UnityEngine;
 
-public class SocketServer : MonoBehaviour
+public class SocketServer : Singleton<SocketServer>
 {
 
     private Socket m_server;
@@ -52,9 +53,14 @@ public class SocketServer : MonoBehaviour
 
     public void OnApplicationQuit()
     {
-        Debug.Log("exit");
+        Log.WriteToLog("服务器退出");
         m_server.Close();
-
     }
+
+    public void CloseClient()
+    {
+        connectedCount--;
+    }
+
 }
 

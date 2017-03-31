@@ -28,8 +28,6 @@ public class ServerThread
             // 处理客户端发来的消息，这里是转化为大写字母
             data=data.Trim( '\0');
             ExecuteOrder(data);
-
-
         }
         //关闭套接字
         m_client.Close();
@@ -63,6 +61,16 @@ public class ServerThread
         //Debug.Log(sb.ToString().Length);
         switch (order)
         {
+            case "exit":
+                Log.WriteToLog("客户端断开");
+                Loom.QueueOnMainThread(
+                    () =>
+                    {
+                        SocketServer.Instance.CloseClient();
+                        m_client.Close();
+                    });
+              
+                break;
             case "start":
                 Log.WriteToLog("--------开始说话");
                 Loom.QueueOnMainThread(
