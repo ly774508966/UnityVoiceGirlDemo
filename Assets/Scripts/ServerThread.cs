@@ -68,7 +68,7 @@ public class ServerThread
                 Loom.QueueOnMainThread(
                     () =>
                     {
-                        SocketServer.Instance.CloseClient();
+                        //SocketServer.Instance.CloseClient();
                         m_client.Close();
                     });
                 isClientDisConnect = true;

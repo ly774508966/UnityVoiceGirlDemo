@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using Academy.HoloToolkit.Unity;
@@ -15,6 +16,10 @@ public class DisplayScript : Singleton<DisplayScript>
     [DllImport("user32.dll", EntryPoint = "GetForegroundWindow")]
     public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
+    public const int WM_CLOSE = 0x10;
+    [DllImport("user32.dll", EntryPoint = "SendMessageA")]
+    public static extern int SendMessage(IntPtr hwnd, int wMsg, int wParam, int lParam);
+
     void  Start()
     {
         
@@ -23,9 +28,9 @@ public class DisplayScript : Singleton<DisplayScript>
 
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if(Input.GetKeyUp(KeyCode.Escape))
         {
-            Application.Quit();
+            Process.GetCurrentProcess().Kill();
         }
     }
 

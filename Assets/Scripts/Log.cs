@@ -17,12 +17,8 @@ public class Log
 
     public static void WriteToLog(string log)
     {
-        //fs = new FileStream("日志.txt", FileMode.Create);
-        //sw = new StreamWriter(fs);
         sw.WriteLine(log);
         sw.Flush();
-        //sw.Close();
-        //fs.Close();
     }
 
     public static void DisConnect()
