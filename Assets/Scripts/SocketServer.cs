@@ -11,12 +11,12 @@ public class SocketServer : Singleton<SocketServer>
     private TcpHelper helper;
     void Start()
     {
-         helper = new TcpHelper();
-         Log.Init();
+        helper = new TcpHelper();
+        Log.Init();
         helper.Run(5099);
     }
 
-    void OnApplicationQuit()
+    void OnDestroy()
     {
         Debug.Log("关闭窗口");
         helper.Close();

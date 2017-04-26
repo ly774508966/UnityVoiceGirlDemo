@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
+using System.Net.Configuration;
 using System.Net.Sockets;
 using System.Threading;
 using System.Text.RegularExpressions;
@@ -15,13 +16,16 @@ namespace TcpServer
 		private List<SocketMessage> msgPool = new List<SocketMessage> ();
 		private bool isClear = true;
 	    private Socket server;
+	    private Thread serverSocketThraed;
+	    private Thread broadcast;
+	    private bool isExit = false;
         /// <summary>
         /// 启动服务器，监听客户端请求
         /// </summary>
         /// <param name="port">服务器端进程口号</param>
         public void Run (int port)
 		{
-			Thread serverSocketThraed = new Thread (() => {
+			    serverSocketThraed = new Thread (() => {
 				server = new Socket (AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 				server.Bind (new IPEndPoint (IPAddress.Any, port));
 				server.Listen (10);
@@ -31,15 +35,15 @@ namespace TcpServer
 			serverSocketThraed.Start ();
 			Console.WriteLine ("Server is ready");
             Log.WriteToLog("服务器开启");
-			Broadcast ();
-		}
+            Broadcast();
+        }
 
 		/// <summary>
 		/// 在独立线程中不停地向所有客户端广播消息
 		/// </summary>
 		private void Broadcast ()
 		{
-			Thread broadcast = new Thread (() => {
+			 broadcast = new Thread (() => {
 				while (true) {
 					if (!isClear) {
                         Console.WriteLine("is Broadcasting");
@@ -53,6 +57,10 @@ namespace TcpServer
 						msgPool.RemoveAt (0);
 						isClear = msgPool.Count == 0 ? true : false;
 					}
+				    if (isExit)
+				    {
+				        break;
+				    }
 				}
 			});
 
@@ -275,8 +283,13 @@ namespace TcpServer
 
 	    public void Close()
 	    {
+	        isExit = true;
+            serverSocketThraed.Abort();
+            broadcast.Abort();
             server.Close();
-	    }
+           
+
+        }
 	}
 
 	public class ClientInfo
